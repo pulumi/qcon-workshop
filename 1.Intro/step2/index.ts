@@ -4,7 +4,11 @@ import { readdirSync } from "fs";
 import { join } from "path";
 
 // Create an AWS resource (S3 Bucket)
-const bucket = new aws.s3.Bucket("my-bucket");
+const bucket = new aws.s3.Bucket("my-bucket", {
+    versioning: {
+        enabled: true,
+    }
+});
 
 const folder = "./files";
 const files = readdirSync(folder);
@@ -17,6 +21,5 @@ for (const file of files) {
     });
 }
 
-// Set up HTTP access to the contents
-
+// Export the name of the bucket
 export const bucketName = bucket.id;

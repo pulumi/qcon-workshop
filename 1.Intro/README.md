@@ -6,6 +6,8 @@
 
 ## Steps
 
+### Step 1
+
 1. Create an empty folder 
 
     ```
@@ -42,4 +44,64 @@
 
     Checkout the Activity and Resource tabs.  Click the link on your bucket to view it in the AWS Console.
 
-1. The end result of these steps is availble in the [step1](./step`) folder.
+1. The end result of the steps so far is availble in the [step1](./step1) folder.
+
+### Step 2
+
+1. Add two imports at the top of your `index.ts` file:
+
+    ```typescript
+    import { readdirSync } from "fs";
+    import { join } from "path";
+    ```
+
+1. Type in the following code after the `new aws.s3.Bucket` line:
+
+    ```typescript
+    const folder = "./files";
+    const files = readdirSync(folder);
+    for (const file of files) {
+        const fileSource = new pulumi.asset.FileAsset(join(folder, file));
+        new aws.s3.BucketObject(file, {
+            bucket: bucket,
+            key: file,
+            source: fileSource,
+        });
+    }
+    ```
+
+1. Create a folder with content to upload
+
+    ```
+    $ mkdir ./files
+    $ touch ./files/index.html
+    $ touch ./files/README.md
+    ```
+
+1. Deploy the changes
+
+    ```typescript
+    pulumi up
+    ```
+
+1. Turn on bucket versioning
+
+    Change the `new aws.s3.Bucket` line to this:
+
+    ```typescript
+    const bucket = new aws.s3.Bucket("my-bucket", {
+        versioning: {
+            enabled: true,
+        }
+    });
+    ```
+
+1. Deploy the changes
+
+    ```typescript
+    pulumi up
+    ```
+
+1. The end result of the steps so far is availble in the [step2](./step2) folder.
+
+

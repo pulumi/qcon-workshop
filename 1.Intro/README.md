@@ -48,6 +48,29 @@
 
 ### Step 2
 
+
+1. Turn on bucket versioning
+
+    Change the `new aws.s3.Bucket` line to this:
+
+    ```typescript
+    const bucket = new aws.s3.Bucket("my-bucket", {
+        versioning: {
+            enabled: true,
+        }
+    });
+    ```
+
+1. Deploy the changes
+
+    ```typescript
+    pulumi up
+    ```
+
+1. The end result of the steps so far is availble in the [step2](./step2) folder.
+
+### Step 3
+
 1. Add two imports at the top of your `index.ts` file:
 
     ```typescript
@@ -84,24 +107,4 @@
     pulumi up
     ```
 
-1. Turn on bucket versioning
-
-    Change the `new aws.s3.Bucket` line to this:
-
-    ```typescript
-    const bucket = new aws.s3.Bucket("my-bucket", {
-        versioning: {
-            enabled: true,
-        }
-    });
-    ```
-
-1. Deploy the changes
-
-    ```typescript
-    pulumi up
-    ```
-
-1. The end result of the steps so far is availble in the [step2](./step2) folder.
-
-
+1. The end result of the steps so far is availble in the [step3](./step3) folder.

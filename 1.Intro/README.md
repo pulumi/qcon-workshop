@@ -63,7 +63,7 @@
 
 1. Deploy the changes
 
-    ```typescript
+    ```
     pulumi up
     ```
 
@@ -103,7 +103,7 @@
 
 1. Deploy the changes
 
-    ```typescript
+    ```
     pulumi up
     ```
 

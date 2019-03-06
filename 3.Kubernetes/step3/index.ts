@@ -32,6 +32,7 @@ const redisMasterDeployment = new k8s.apps.v1.Deployment("redis-master-deploy", 
 
 const redisMasterService = new k8s.core.v1.Service("redis-master-service", {
     metadata: {
+        name: "redis-master",
         namespace: namespaceName,
         labels: redisMasterLabels,
     },
@@ -63,10 +64,6 @@ const redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-replica-deploym
                     name: "replica",
                     image: "gcr.io/google_samples/gb-redisslave:v1",
                     resources: { requests: { cpu: "100m", memory: "100Mi" } },
-                    env: [
-                        { name: "GET_HOSTS_FROM", value: "env" },
-                        { name: "REDIS_MASTER_SERVICE_HOST", value: redisMasterHost },
-                    ],
                     ports: [{ containerPort: 6379 }] 
                 }]
             }
@@ -75,6 +72,7 @@ const redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-replica-deploym
 });
 const redisReplicaService = new k8s.core.v1.Service("redis-replica-service", {
     metadata: {
+        name: "redis-slave",
         namespace: namespaceName,
         labels: redisReplicaLabels,
     },
@@ -112,20 +110,6 @@ const frontendDeployment = new k8s.apps.v1.Deployment("frontend-deployment", {
                             memory: "100Mi"
                         }
                     },
-                    env: [
-                        {
-                            name: "GET_HOSTS_FROM",
-                            value: "env",
-                        },
-                        {
-                            name: "REDIS_MASTER_SERVICE_HOST",
-                            value: redisMasterHost,
-                        },
-                        {
-                            name: "REDIS_SLAVE_SERVICE_HOST",
-                            value: redisReplicaHost,
-                        }
-                    ],
                     ports: [{ containerPort: 80 }],
                 }]
             }

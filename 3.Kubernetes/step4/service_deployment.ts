@@ -21,7 +21,6 @@ export class ServiceDeployment extends pulumi.ComponentResource {
                     memory: "100Mi",
                 },
             },
-            env: args.env,
             ports: args.ports.map(p => ({ containerPort: p })),
         }
         this.deployment = new k8s.apps.v1.Deployment(`${name}-deployment`, {
@@ -45,6 +44,7 @@ export class ServiceDeployment extends pulumi.ComponentResource {
         }, childOpts);
         this.service = new k8s.core.v1.Service(`${name}-svc`, {
             metadata: {
+                name: args.name,
                 namespace: namespaceName,
                 labels: labels,
             },
@@ -57,7 +57,7 @@ export class ServiceDeployment extends pulumi.ComponentResource {
         if (args.type === "ClusterIP") {
             this.host = this.service.spec.apply(spec => spec.clusterIP);
         } else {
-            this.host = this.service.status.apply(status => status.loadBalancer.ingress[0].ip);
+            this.host = this.service.status.apply(status => status.loadBalancer.ingress[0].hostname);
         }
         this.registerOutputs({});
     }
@@ -69,6 +69,7 @@ export interface EnvironmentVariable {
 }
 
 export interface ServiceDeploymentArgs {
+    name: string;
     namespace: k8s.core.v1.Namespace;
     ports: number[];
     image: string;

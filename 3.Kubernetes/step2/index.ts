@@ -1,54 +1,43 @@
-import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
-import { ServiceDeployment } from "./service_deployment"
-
-const namespace = new k8s.core.v1.Namespace("qcon");
-
-// Redis Primary
-const redisPrimary = new ServiceDeployment("redis-primary", {
-    namespace: namespace,
-    ports: [6379],
-    image: "k8s.gcr.io/redis:e2e",
-    type: "ClusterIP",
-});
-
-const redisReplica = new ServiceDeployment("redis-replica", {
-    namespace: namespace,
-    ports: [6379],
-    image: "gcr.io/google_samples/gb-redisslave:v1",
-    env: [
-        {
-            name: "GET_HOSTS_FROM",
-            value: "env",
+const namespace = new k8s.core.v1.Namespace("nginx");
+export const namespaceName = namespace.metadata.apply(meta => meta.name);
+const labels = { app: "nginx" };
+const nginxDeployment = new k8s.apps.v1.Deployment("nginx-deploy", {
+    metadata: {
+        labels: labels,
+        namespace: namespaceName,
+    }, spec: {
+        selector: {
+            matchLabels: labels,
         },
-        {
-            name: "REDIS_MASTER_SERVICE_HOST",
-            value: redisPrimary.host,
-        },
-    ],
-    type: "ClusterIP",
-});
-
-const frontend = new ServiceDeployment("frontend", {
-    namespace: namespace,
-    ports: [80],
-    image: "gcr.io/google-samples/gb-frontend:v4",
-    env: [
-        {
-            name: "GET_HOSTS_FROM",
-            value: "env",
-        },
-        {
-            name: "REDIS_MASTER_SERVICE_HOST",
-            value: redisPrimary.host,
-        },
-        {
-            name: "REDIS_SLAVE_SERVICE_HOST",
-            value: redisReplica.host,
+        replicas: 2,
+        template: {
+            metadata: {
+                labels: labels,
+                namespace: namespaceName,
+            },
+            spec: {
+                containers: [{
+                    name: "nginx",
+                    image: "nginx:latest",
+                    ports: [{containerPort: 80}]
+                }]
+            }
         }
-    ],
-    type: "LoadBalancer",
+    }
 });
 
-export const frontendHost = pulumi.concat("http://", frontend.host);
+const nginxService = new k8s.core.v1.Service("nginx-service", {
+    metadata: {
+        labels: labels,
+        namespace: namespaceName,
+    },
+    spec: {
+        selector: labels,
+        ports: [{ targetPort: 80, port: 80 }],
+        type: "LoadBalancer",
+    }
+});
+
+export const host = nginxService.status.apply(status => status.loadBalancer.ingress[0].hostname);

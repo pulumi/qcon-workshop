@@ -1,1 +1,3 @@
 Pulumi.*.yaml
+kubeconfig
+node_modules/

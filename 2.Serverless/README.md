@@ -52,6 +52,12 @@
 
 ### Step 2
 
+1. Add the `@pulumi/awsx` package:
+
+    ```
+    $ npm install --save @pulumi/awsx
+    ```
+    
 1. Add a Fargate TaskDefinition
 
     ```typescript
@@ -155,6 +161,17 @@
 1. The end result of the steps so far is available in the [step2](./step2) folder.
 
 ### Step 3
+
+1. Update the fargate task to use `lukehoban/ffmpeg-thumb`:
+
+    ```typescript
+    const task = new awsx.ecs.FargateTaskDefinition("task", {
+        container: {
+            image: "lukehoban/ffmpeg-thumb",
+            memoryReservation: 512,
+        },
+    });
+    ```
 
 1. Replace the body of the handler with:
 

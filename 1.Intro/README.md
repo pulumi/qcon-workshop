@@ -22,7 +22,7 @@
 
     Pick the `aws-typescript` template, and use the `eu-west-1` region.  Say `yes` at the end to deploy the example.
 
-1. Open the code in your editor/IDE
+1. Open the code in your editor/IDE (like [Code](https://code.visualstudio.com/download))
 
     ```
     $ code .
@@ -96,9 +96,9 @@
 1. Create a folder with content to upload
 
     ```
-    $ mkdir ./files
-    $ touch ./files/index.html
-    $ touch ./files/README.md
+    $ mkdir files
+    
+    $ <create some files in the `files` folder>
     ```
 
 1. Deploy the changes

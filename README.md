@@ -19,7 +19,7 @@ Source code for the Programming the Cloud with TypeScript workshop at QCON Londo
 
 1. Configure AWS credentials
 
-    Run `aws configure` to configure credentials and defaults for AWS.  Use the Access Key ID and Secret Access Key provided for the workshop.  Set the `eu-west-1` region as the default.
+    Run `aws configure` to configure credentials and defaults for AWS.  Use the Access Key ID and Secret Access Key provided for the workshop.  Set the `eu-west-1` region as the default.  We will be using account 713699580332 which you can log in to at https://713699580332.signin.aws.amazon.com/console.
 
 1. Login to Pulumi
 

@@ -1,3 +1,8 @@
+# This repo is being deprecated in favor of https://github.com/pulumi/workshops.
+![deprecated](https://img.shields.io/badge/repo%20status-deprecated-red)
+
+The workshops in this repo have been moved over to that repo and placed in the archive as newer workshops based off these workshops have been generated.
+
 # Programming the Cloud Workshop
 
 Source code for the Programming the Cloud with TypeScript workshop at QCON London.
